@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -50,6 +51,18 @@ func main() {
 		})
 	})
 
+	// bookings
+	r.Route("/bookings", func(r chi.Router) {
+		r.Get("/", ListBookings)
+		r.Post("/", CreateBooking)
+		r.Route("/{bookingID}", func(r chi.Router) {
+			r.Use(BookingCtx)
+			r.Get("/", GetBooking)
+			r.Put("/", UpdateBooking)
+			r.Delete("/", DeleteBooking)
+		})
+	})
+
 	// fire up the web server
 	http.ListenAndServe(":3333", r)
 }
@@ -66,6 +79,27 @@ func ClassCtx(next http.Handler) http.Handler {
 		}
 
 		ctx := context.WithValue(r.Context(), "class", class)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+// BookingCtx loads and injects a Class object into the request.
+// In case the Class cannot be found, it returns a 404
+func BookingCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.Atoi(chi.URLParam(r, "bookingID"))
+		if err != nil {
+			render.Render(w, r, ErrRender(err))
+			return
+		}
+
+		booking, err := storage.GetBooking(id)
+		if err != nil {
+			render.Render(w, r, ErrNotFound(err))
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), "booking", booking)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

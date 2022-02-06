@@ -13,6 +13,13 @@ CREATE TABLE class (
 	end_date DATETIME,
     capacity INTEGER
 );
+
+CREATE TABLE booking (
+	id INTEGER PRIMARY KEY,
+	date DATETIME,
+	customer TEXT,
+	class TEXT
+);
 `
 
 // SqliteStorage implements the Storage interface saving data
@@ -41,9 +48,9 @@ func NewSqliteStorage(path string) Storage {
 	return d
 }
 
-func (s *SqliteStorage) Close() error {
-	return s.db.Close()
-}
+/*
+	Class management functions
+*/
 
 func (s *SqliteStorage) AddClass(c *models.Class) (string, error) {
 	c.ID = makeID(c.Name)
@@ -84,4 +91,60 @@ func (s *SqliteStorage) UpdateClass(ID string, c *models.Class) error {
 func (s *SqliteStorage) DeleteClass(ID string) error {
 	_, err := s.db.Exec("DELETE from class WHERE id=$1", ID)
 	return err
+}
+
+/*
+	Class management functions
+*/
+
+func (s *SqliteStorage) AddBooking(b *models.Booking) (int, error) {
+	err := s.db.Get(&b.ID, "SELECT MAX(id) FROM booking")
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = s.db.NamedExec(
+		"INSERT INTO booking(id, date, customer, class) VALUES (:id, :date, :customer, :class)",
+		b,
+	)
+
+	return b.ID, err
+}
+
+func (s *SqliteStorage) GetBookings() ([]*models.Booking, error) {
+	bookings := []*models.Booking{}
+
+	err := s.db.Select(&classes, `SELECT * FROM bookings`)
+
+	return bookings, err
+}
+
+func (s *SqliteStorage) GetBooking(ID int) (*models.Booking, error) {
+	b := models.Booking{}
+	err := s.db.Get(&b, "SELECT * FROM booking WHERE id=$1", ID)
+
+	return &b, err
+}
+
+func (s *SqliteStorage) UpdateBooking(ID int, c *models.Booking) error {
+
+	_, err := s.db.NamedExec(
+		"Update booking SET date=:date, customer=:customer, class=:class WHERE id=:id",
+		c,
+	)
+
+	return err
+}
+
+func (s *SqliteStorage) DeleteBooking(ID int) error {
+	_, err := s.db.Exec("DELETE from booking WHERE id=$1", ID)
+	return err
+}
+
+/*
+	Others
+*/
+
+func (s *SqliteStorage) Close() error {
+	return s.db.Close()
 }

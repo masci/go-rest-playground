@@ -14,3 +14,11 @@ type Class struct {
 	EndDate   time.Time `json:"end_date" db:"end_date"`
 	Capacity  int       `json:"capacity" db:"capacity"`
 }
+
+// Booking represents a customer's booking for a certain class
+type Booking struct {
+	ID       int
+	Date     time.Time `json:"date" db:"date"`
+	Customer string    `json:"customer" db:"customer"`
+	Class    string    `json:"class" db:"class"`
+}

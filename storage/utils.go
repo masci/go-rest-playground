@@ -5,6 +5,8 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/go-rest-playground/models"
 )
 
 // makeID generates 6 digits random identifiers for resources. E.g. `BA0001`
@@ -20,4 +22,10 @@ func makeID(name string) string {
 func createTime(date string) time.Time {
 	t, _ := time.Parse("2006-01-02", date)
 	return t
+}
+
+// canBook returns wether the class can be booked or not
+// according to its date availability
+func canBook(b *models.Booking, c *models.Class) bool {
+	return b.Date.After(c.StartDate) && b.Date.Before(c.EndDate)
 }
