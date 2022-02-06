@@ -68,3 +68,37 @@ of the source tree run:
 ```sh
 $ go test ./...
 ```
+
+`chi` was used to implement the HTTP router, along with the helpers to render the
+request and response payloads.
+
+`sqlx` was used to talk to the SQLite database.
+
+## Architecture
+
+The code is organized in three packages:
+- `models` provides the data types of the data model
+- `storage` provides the functionalities to organize and persist data
+- `main` implements the REST API service
+
+The code layout reflects the overall architecture:
+
+```
+          ┌──────────────────────────────────────────────────────┐
+          │                                                      │
+          │                                                      ▼
+┌───────────────────┐       ┌───────────────────┐      ┌───────────────────┐
+│                   │       │                   │      │                   │
+│    API service    │──────▶│      Storage      │─────▶│    Data models    │
+│                   │       │                   │      │                   │
+└───────────────────┘       └───────────────────┘      └───────────────────┘
+                                      ▲
+                                      │
+                        ┌─────────────┴─────────────┐
+                        │                           │
+                        │                           │
+              ┌───────────────────┐       ┌───────────────────┐
+              │      In-mem       │       │      SQLite       │
+              │  implementation   │       │  implementation   │
+              └───────────────────┘       └───────────────────┘
+```
