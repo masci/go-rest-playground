@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/masci/go-rest-playground/models"
 )
@@ -80,10 +82,16 @@ func (s *SqliteStorage) GetClass(ID string) (*models.Class, error) {
 
 func (s *SqliteStorage) UpdateClass(ID string, c *models.Class) error {
 
-	_, err := s.db.NamedExec(
+	res, err := s.db.NamedExec(
 		"Update class SET name=:name, start_date=:start_date, end_date=:end_date, capacity=:capacity WHERE id=:id",
 		c,
 	)
+
+	// no rows affected
+	affected, _ := res.RowsAffected()
+	if affected == 0 {
+		return fmt.Errorf("no class found with id: %s", ID)
+	}
 
 	return err
 }
@@ -94,11 +102,20 @@ func (s *SqliteStorage) DeleteClass(ID string) error {
 }
 
 /*
-	Class management functions
+	Booking management functions
 */
 
 func (s *SqliteStorage) AddBooking(b *models.Booking) (int, error) {
-	err := s.db.Get(&b.ID, "SELECT IFNULL( MAX(id), 0 ) from booking;") // this strategy won't reuse deleted ids
+	// check wether the booking is valid
+	class, err := s.GetClass(b.Class)
+	if err != nil {
+		return -1, err
+	}
+	if !canBook(b, class) {
+		return -1, fmt.Errorf("class %s is not available at %s", class.Name, b.Date)
+	}
+
+	err = s.db.Get(&b.ID, "SELECT IFNULL( MAX(id), 0 ) from booking;") // this strategy won't reuse deleted ids
 	if err != nil {
 		return 0, err
 	}
@@ -115,7 +132,7 @@ func (s *SqliteStorage) AddBooking(b *models.Booking) (int, error) {
 func (s *SqliteStorage) GetBookings() ([]*models.Booking, error) {
 	bookings := []*models.Booking{}
 
-	err := s.db.Select(&classes, `SELECT * FROM bookings`)
+	err := s.db.Select(&bookings, `SELECT * FROM booking`)
 
 	return bookings, err
 }
@@ -129,10 +146,16 @@ func (s *SqliteStorage) GetBooking(ID int) (*models.Booking, error) {
 
 func (s *SqliteStorage) UpdateBooking(ID int, c *models.Booking) error {
 
-	_, err := s.db.NamedExec(
+	res, err := s.db.NamedExec(
 		"Update booking SET date=:date, customer=:customer, class=:class WHERE id=:id",
 		c,
 	)
+
+	// no rows affected
+	affected, _ := res.RowsAffected()
+	if affected == 0 {
+		return fmt.Errorf("no booking found with id: %d", ID)
+	}
 
 	return err
 }

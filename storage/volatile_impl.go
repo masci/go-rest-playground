@@ -78,10 +78,10 @@ func (s *VolatileStorage) AddBooking(b *models.Booking) (int, error) {
 	// check wether the booking is valid
 	class, err := s.GetClass(b.Class)
 	if err != nil {
-		return 0, err
+		return -1, err
 	}
 	if !canBook(b, class) {
-		return 0, fmt.Errorf("class %s is not available at %s", class.Name, b.Date)
+		return -1, fmt.Errorf("class %s is not available at %s", class.Name, b.Date)
 	}
 
 	// proceed with booking creation
