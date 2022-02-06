@@ -102,3 +102,8 @@ The code layout reflects the overall architecture:
               │  implementation   │       │  implementation   │
               └───────────────────┘       └───────────────────┘
 ```
+
+## Limitations
+
+- The web service doesn't provide any authentication/authorization feature
+- The happy code path was usually assumed, leaving out some error handling
