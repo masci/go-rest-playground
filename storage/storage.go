@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/go-rest-playground/models"
+	"github.com/masci/go-rest-playground/models"
 	_ "github.com/mattn/go-sqlite3"
 )
 

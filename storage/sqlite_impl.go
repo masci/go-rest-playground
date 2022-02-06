@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"github.com/go-rest-playground/models"
 	"github.com/jmoiron/sqlx"
+	"github.com/masci/go-rest-playground/models"
 )
 
 var schema = `

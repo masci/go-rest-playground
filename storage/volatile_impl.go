@@ -3,7 +3,7 @@ package storage
 import (
 	"fmt"
 
-	"github.com/go-rest-playground/models"
+	"github.com/masci/go-rest-playground/models"
 )
 
 // VolatileStorage implements a trivial in-memory storage for the

@@ -11,7 +11,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
-	s "github.com/go-rest-playground/storage"
+	s "github.com/masci/go-rest-playground/storage"
 )
 
 var dbFile = flag.String("use-db", "", "Path to the SQLite database file")

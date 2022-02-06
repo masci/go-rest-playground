@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-rest-playground/models"
+	"github.com/masci/go-rest-playground/models"
 )
 
 // makeID generates 6 digits random identifiers for resources. E.g. `BA0001`

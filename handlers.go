@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/go-rest-playground/models"
+	"github.com/masci/go-rest-playground/models"
 )
 
 // ListClasses handles GET requests at /classes

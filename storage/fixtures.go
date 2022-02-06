@@ -1,6 +1,6 @@
 package storage
 
-import "github.com/go-rest-playground/models"
+import "github.com/masci/go-rest-playground/models"
 
 var classes = []*models.Class{
 	{ID: "PI0001", Name: "Pilates", StartDate: createTime("2020-01-29"), EndDate: createTime("2020-02-28"), Capacity: 20},

@@ -1,4 +1,4 @@
-module github.com/go-rest-playground
+module github.com/masci/go-rest-playground
 
 go 1.16
 
