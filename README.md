@@ -72,7 +72,7 @@ $ go test ./...
 Tests run with the volatile storage implementation by default, if you want to run
 the same test with the SQLite implementation run them with:
 ```sh
-$ go test ./... -args -storage-type sqlite
+$ go test ./... -args -storage=sqlite
 ```
 In a CI environment we would want to run them both.
 

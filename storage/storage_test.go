@@ -8,7 +8,7 @@ import (
 	"github.com/masci/go-rest-playground/models"
 )
 
-var storageType = flag.String("storage", "all", "type of storage to test: [volatile|sqlite]")
+var storageType = flag.String("storage", "volatile", "type of storage to test: [volatile|sqlite]")
 
 var getStorage func() Storage
 
