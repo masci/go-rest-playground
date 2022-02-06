@@ -8,28 +8,31 @@ import (
 	"github.com/masci/go-rest-playground/models"
 )
 
-var storageType = flag.String("storage-type", "volatile", "type of storage to test: [volatile|sqlite]")
+var storageType = flag.String("storage", "all", "type of storage to test: [volatile|sqlite]")
 
 var getStorage func() Storage
 
 func TestMain(m *testing.M) {
+	flag.Parse()
+
 	if *storageType == "volatile" {
 		getStorage = func() Storage {
 			return NewVolatileStorage()
 		}
+		os.Exit(m.Run())
 	} else if *storageType == "sqlite" {
 		getStorage = func() Storage {
 			return NewSqliteStorage(":memory:")
 		}
+		os.Exit(m.Run())
 	} else {
 		os.Exit(1)
 	}
-
-	os.Exit(m.Run())
 }
 
 func TestAddClass(t *testing.T) {
 	s := getStorage()
+	defer s.Close()
 
 	// count the fixtures
 	list, _ := s.GetClasses()
@@ -46,6 +49,7 @@ func TestAddClass(t *testing.T) {
 
 func TestGetClass(t *testing.T) {
 	s := getStorage()
+	defer s.Close()
 
 	c, err := s.GetClass("PI0001")
 
