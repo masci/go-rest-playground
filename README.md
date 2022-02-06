@@ -7,7 +7,7 @@
 There are no binary distributions available, so you need a working Go environment to build and
 run the service locally:
 ```sh
-$ go get github.com/masci/go-rest-playground
+$ go get github.com/masci/go-rest-playground && go-rest-playground
 ```
 
 ## Usage
@@ -16,13 +16,13 @@ The service can use an in-memory storage (used by default) or a SQLite database 
 
 To start the in-memory version:
 ```sh
-$ go run .
+$ go-rest-playground
 Using in-memory storage, all data will be lost on exit
 ```
 
 To persist data, launch the program passing a valid path to a file with `-use-db`:
 ```sh
-$ go run . -use-db=./.db
+$ go-rest-playground -use-db=./.db
 ```
 
 ## CRUD operations
@@ -61,3 +61,10 @@ $ curl --header "Content-Type: application/json" \
 ```
 
 ## Development
+
+Testing can be very opinionated so I decided to go with the standard library, without
+using any framework or external dependency. To execute the test suite, from the root
+of the source tree run:
+```sh
+$ go test ./...
+```
