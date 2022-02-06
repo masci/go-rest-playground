@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
+
+	"github.com/masci/go-rest-playground/models"
 )
 
 func TestMakeID(t *testing.T) {
@@ -44,6 +46,44 @@ func TestCreateTime(t *testing.T) {
 			date := createTime(tt.input)
 			if date.String() != tt.want {
 				t.Errorf("got %s, want %s", date, tt.want)
+			}
+		})
+	}
+}
+
+func TestCanBook(t *testing.T) {
+	var tests = []struct {
+		b    *models.Booking
+		c    *models.Class
+		want bool
+	}{
+		{
+			&models.Booking{
+				Date: createTime("2020-01-29"),
+			},
+			&models.Class{
+				StartDate: createTime("2020-01-01"),
+				EndDate:   createTime("2020-01-31"),
+			},
+			true,
+		},
+		{
+			&models.Booking{
+				Date: createTime("2019-01-29"),
+			},
+			&models.Class{
+				StartDate: createTime("2020-01-01"),
+				EndDate:   createTime("2020-01-31"),
+			},
+			false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			can := canBook(tt.b, tt.c)
+			if can != tt.want {
+				t.Errorf("got %t, want %t", can, tt.want)
 			}
 		})
 	}
