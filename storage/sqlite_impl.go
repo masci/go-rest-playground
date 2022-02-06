@@ -98,10 +98,11 @@ func (s *SqliteStorage) DeleteClass(ID string) error {
 */
 
 func (s *SqliteStorage) AddBooking(b *models.Booking) (int, error) {
-	err := s.db.Get(&b.ID, "SELECT MAX(id) FROM booking")
+	err := s.db.Get(&b.ID, "SELECT IFNULL( MAX(id), 0 ) from booking;") // this strategy won't reuse deleted ids
 	if err != nil {
 		return 0, err
 	}
+	b.ID++
 
 	_, err = s.db.NamedExec(
 		"INSERT INTO booking(id, date, customer, class) VALUES (:id, :date, :customer, :class)",
