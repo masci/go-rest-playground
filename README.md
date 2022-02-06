@@ -69,6 +69,13 @@ of the source tree run:
 $ go test ./...
 ```
 
+Tests run with the volatile storage implementation by default, if you want to run
+the same test with the SQLite implementation run them with:
+```sh
+$ go test ./... -args -storage-type sqlite
+```
+In a CI environment we would want to run them both.
+
 `chi` was used to implement the HTTP router, along with the helpers to render the
 request and response payloads.
 
