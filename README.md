@@ -23,6 +23,7 @@ Using in-memory storage, all data will be lost on exit
 To persist data, launch the program passing a valid path to a file with `-use-db`:
 ```sh
 $ go-rest-playground -use-db=./.db
+Using SQLite database ./.db
 ```
 
 ## CRUD operations
@@ -114,3 +115,5 @@ The code layout reflects the overall architecture:
 
 - The web service doesn't provide any authentication/authorization feature
 - The happy code path was usually assumed, leaving out some error handling
+- Test coverage is low as in some cases I only provided the most significative tests
+  without repeating boilerplate for similar cases.
